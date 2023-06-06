@@ -1,0 +1,102 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class EditorArvore {
+    public static void main(String[] args) {
+        ArvoreBinaria arvore = new ArvoreBinaria();
+        carregarArvore(arvore, "alunos.txt");
+
+        Scanner scanner = new Scanner(System.in);
+        int opcao = 0;
+
+        while (opcao != 0) {
+            exibirMenu();
+            opcao = scanner.nextInt();
+            scanner.nextLine(); 
+            
+            
+
+            switch (opcao) {
+                case 1:
+                    System.out.print("RGM: ");
+                    int rgm = scanner.nextInt();
+                    scanner.nextLine(); 
+                    System.out.print("Nome: ");
+                    String nome = scanner.nextLine();
+                    arvore.inserir(new Aluno(rgm, nome));
+                    System.out.println("Aluno inserido com sucesso!");
+                    break;
+                case 2:
+                    System.out.print("RGM: ");
+                    rgm = scanner.nextInt();
+                    scanner.nextLine(); 
+                    if (arvore.pesquisar(rgm)) {
+                        arvore.remover(rgm);
+                        System.out.println("Aluno removido com sucesso!");
+                    } else {
+                        System.out.println("Aluno não encontrado!");
+                    }
+                    break;
+                case 3:
+                    System.out.print("RGM: ");
+                    rgm = scanner.nextInt();
+                    scanner.nextLine(); 
+                    if (arvore.pesquisar(rgm)) {
+                        System.out.println("Aluno encontrado!");
+                    } else {
+                        System.out.println("Aluno não encontrado!");
+                    }
+                    break;
+                case 4:
+                    arvore.esvaziar();
+                    System.out.println("Árvore esvaziada!");
+                    break;
+                case 5:
+                    arvore.exibirArvore();
+                    break;
+                case 0:
+                    System.out.println("Encerrando o programa...");
+                    break;
+                default:
+                    System.out.println("Opção inválida!");
+                    break;
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static void exibirMenu() {
+        System.out.println("\nALUNO: NOME COMPLETO DO ALUNO");
+        System.out.println("DISCIPLINA: ESTRUTURA DE DADOS I");
+        System.out.println("PROFESSOR: WALACE BONFIM");
+        System.out.println("\nEDITOR DE ÁRVORE");
+        System.out.println("1 - INSERIR");
+        System.out.println("2 - REMOVER UM NÓ");
+        System.out.println("3 - PESQUISAR");
+        System.out.println("4 - ESVAZIAR A ÁRVORE");
+        System.out.println("5 - EXIBIR A ÁRVORE");
+        System.out.println("0 - SAIR");
+        System.out.print("\nDIGITE SUA OPÇÃO: ");
+    }
+
+    private static void carregarArvore(ArvoreBinaria arvore, String nomeArquivo) {
+        try {
+            File arquivo = new File(nomeArquivo);
+            Scanner scanner = new Scanner(arquivo);
+
+            while (scanner.hasNextLine()) {
+                String linha = scanner.nextLine();
+                String[] dados = linha.split(" - ");
+                int rgm = Integer.parseInt(dados[0]);
+                String nome = dados[1];
+                arvore.inserir(new Aluno(rgm, nome));
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Erro ao carregar o arquivo: " + e.getMessage());
+        }
+    }
+}
